@@ -7,14 +7,22 @@ server <- function(input, output) {
   # 1. It is "reactive" and therefore should be automatically
   #    re-executed when inputs (input$bins) change
   # 2. Its output type is a plot
-  output$new_cases_plot <- renderPlotly({
+  
+  fectch_data <- reactive({
     countries <- input$countries
+    subset <- covid_data %>% 
+      dplyr::filter(location %in% countries,
+             date <= input$daterange[2],
+             date >= input$daterange[1])
+    return(subset)
+  })
+  
+  output$new_cases_plot <- renderPlotly({
+    data <- fectch_data()
     if (input$smooth) {
-      g <- ggplot(covid_data %>% filter(location %in% countries,
-                                   date <= input$daterange[2],
-                                   date >= input$daterange[1]), 
-             aes(x = date, y = new_cases_smoothed, 
-                 group = location, color = location)) +
+      g <- ggplot(data, 
+                  aes(x = date, y = new_cases_smoothed, 
+                      group = location, color = location)) +
         geom_line(lwd = 1) +
         theme_bw() +
         ylab("Number of new cases") +
@@ -25,11 +33,9 @@ server <- function(input, output) {
         labs(color = "Country/Region") +
         xlab("")
     } else {
-      g <- ggplot(covid_data %>% filter(location %in% countries,
-                                   date <= input$daterange[2],
-                                   date >= input$daterange[1]), 
-             aes(x = date, y = new_cases, 
-                 group = location, color = location)) +
+      g <- ggplot(data, 
+                  aes(x = date, y = new_cases, 
+                      group = location, color = location)) +
         geom_line(lwd = 1) +
         theme_bw() +
         ylab("Number of new cases") +
@@ -47,13 +53,10 @@ server <- function(input, output) {
   })
   
   output$total_cases_plot <- renderPlotly({
-    countries <- input$countries
-    g <- ggplot(covid_data %>% 
-             filter(location %in% countries,
-                    date <= input$daterange[2],
-                    date >= input$daterange[1]), 
-           aes(x = date, y = total_cases, 
-               group = location, color = location)) +
+    data <- fectch_data()
+    g <- ggplot(data, 
+                aes(x = date, y = total_cases, 
+                    group = location, color = location)) +
       geom_line(lwd = 1) +
       theme_bw() +
       ylab("Number of total cases") +

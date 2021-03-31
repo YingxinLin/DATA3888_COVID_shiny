@@ -24,3 +24,5 @@ covid_data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.cs
 covid_data$date <- as.Date(covid_data$date)
 covid_data$new_cases[covid_data$new_cases < 0] <- 0
 covid_data$new_cases_smoothed[covid_data$new_cases_smoothed < 0] <- 0
+
+
