@@ -5,19 +5,19 @@ library(plotly)
 
 # If you want to update the data, set it as TRUE. 
 # Or read csv directly from the link of the data
-update_data <- FALSE
+# update_data <- FALSE
+# 
+# if (!dir.exists("data")) {
+#   dir.create("data")
+# }
+# 
+# if (update_data | !file.exists("data/owid-covid-data.csv")) {
+#   download.file("https://covid.ourworldindata.org/data/owid-covid-data.csv", 
+#                 destfile = file.path(getwd(), "/data/owid-covid-data.csv"))
+#   
+# }
 
-if (!dir.exists("data")) {
-  dir.create("data")
-}
-
-if (update_data | !file.exists("data/owid-covid-data.csv")) {
-  download.file("https://covid.ourworldindata.org/data/owid-covid-data.csv", 
-                destfile = file.path(getwd(), "/data/owid-covid-data.csv"))
-  
-}
-
-covid_data <- read.csv("data/owid-covid-data.csv",
+covid_data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv",
                        stringsAsFactors = FALSE,
                        check.names =  FALSE)
 
